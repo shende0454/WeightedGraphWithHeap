@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GraphLib
 {
-    public class WeightedGraph : IWeightedGraph
+    public class WeightedGraph : IWeightedGraph, IGraph
     {
         public int v;
         public int e;
@@ -19,37 +19,53 @@ namespace GraphLib
             NVertices = 0;
             NEdges = 0;
             _adjacencyList = new List<List<Edge>>();
-            foreach (List<Edge> i in _adjacencyList)
+            
+
+        }
+
+        public void MakeVertex(int id)
+        {
+
+            while (_adjacencyList.Count <= id)
             {
-                i.Add(new Edge());
+                _adjacencyList.Add(new List<Edge>());
             }
 
+            NVertices++;
         }
         public void AddEdge(int firstVertex, int secondVertex, double weight)
         {
             Edge e = new Edge(firstVertex, secondVertex, weight);
-            int v = e.EitherVertex, w = e.OtherVertex(v);
-            _adjacencyList[v].Add(e);
-            _adjacencyList[w].Add(e);
-            //if (_adjacencyList[firstId].Contains(secondId) == false)
-            //{
-            //    _adjacencyList[firstId].Add(secondId);
-            //}
-            //if (_adjacencyList[secondId].Contains(firstId) == false)
-            //{
-            //    _adjacencyList[secondId].Add(firstId);
-            //}
+
+            int vtx = e.EitherVertex;
+            int wght = e.OtherVertex(v);
+
+            MakeVertex(firstVertex);
+            MakeVertex(secondVertex);
+            _adjacencyList[vtx].Add(e);
+            _adjacencyList[wght].Add(e);
+            
             NEdges++;
         }
 
         public void AddEdge(int firstVertex, int secondVertex)
         {
-            throw new NotImplementedException();
-        }
+            Edge e = new Edge(firstVertex, secondVertex);
 
+            int vtx = e.EitherVertex;
+            int wght = e.OtherVertex(v);
+
+            MakeVertex(firstVertex);
+            MakeVertex(secondVertex);
+            _adjacencyList[vtx].Add(e);
+            _adjacencyList[wght].Add(e);
+
+            NEdges++;
+        }
+        
         public IEnumerable<int> GetAdjacentVertices(int vertexId)
         {
-            throw new NotImplementedException();
+            return (IEnumerable<int>)_adjacencyList[vertexId];
         }
 
         public IEnumerable<IEdge> GetEdgesFrom(int vertex)

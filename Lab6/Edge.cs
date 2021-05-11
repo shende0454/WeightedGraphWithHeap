@@ -8,36 +8,38 @@ namespace GraphLib
 {
     public class Edge : IEdge
     {
-        public int vt;
+       
         public Edge() { }
         public Edge(int v, int eitherVertex, double weight)
         {
             Weight = weight;
-            EitherVertex = eitherVertex;
-            var listOfStrings = new List<int>();
-            vt = v;
-            int[] Vertex = listOfStrings.ToArray() ;
+            Vertex = new int[2];
+            Vertex[0] = v;
+            Vertex[1] = eitherVertex;
            
+        }
+        public Edge(int v, int eitherVertex)
+        {
+            Vertex = new int[2];
+            Vertex[0] = v;
+            Vertex[1] = eitherVertex;
         }
         public double Weight
         {
+            set;
             get;
         }
 
         public int EitherVertex
         {
-            get;
+            set { Vertex[0] = value; }
+            get { return Vertex[0]; }
         }
 
         public int[] Vertex
         {
             get;
-            
-              
-            
             set;
-            
-            
         }
         
         
@@ -61,18 +63,7 @@ namespace GraphLib
 
         public int OtherVertex(int vertex)
         {
-            int otherVertex = -1;
-            if (vertex == EitherVertex)
-            {
-                otherVertex = vt;
-            }
-
-            else if (vertex == vt)
-            {
-                otherVertex = EitherVertex;
-            }
-            else throw new Exception("Inconsistent edge");
-            return otherVertex;
+            return (vertex == Vertex[0]) ? Vertex[1] : Vertex[0];
         }
     }
 }

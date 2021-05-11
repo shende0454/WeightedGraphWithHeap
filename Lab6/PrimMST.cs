@@ -9,15 +9,56 @@ namespace GraphLib
 {
     public class PrimMST
     {
-        private bool[] marked; // MST vertices
-        private Queue<Edge> mst; // MST edges
-        private Heap<Edge,Edge> pq; // crossing (and ineligible) edges
-        Comparer<Edge> comparer;
-        public PrimMST(IWeightedGraph g)
+        private bool[] isMarked; //all vertices
+        private Queue<Edge> minSpanTree; //all edges
+        private Heap<Edge,Edge> heap; //crossed edges
+        Comparer<Edge> theComparer;
+        public PrimMST(IWeightedGraph G)
         {
-           
-            
+
+            heap = new Heap<Edge,Edge>(theComparer);
+            isMarked = new bool[G.NVertices];
+            minSpanTree = new Queue<Edge>();
+
+            visit(G, 0); // assumes G is connected (see Exercise 4.3.22)
+            while (heap.IsEmpty())
+            {
+                //Edge key;
+                //Edge payload;
+                Edge e; 
+                heap.Dequeue(out _, out e); // Get lowest-weight
+                int vertex = e.EitherVertex, weight = e.OtherVertex(vertex); // edge from pq.
+                if (isMarked[vertex] && isMarked[weight])
+                {
+                    continue; // Go over
+                }
+                minSpanTree.Enqueue(e); // Add the edge to min spanning tree.
+                if (!isMarked[vertex])
+                {
+                    visitEdge(G, vertex);
+                }
+                if (!isMarked[weight])// Add vertex to min spanning tree
+                {
+                    visitEdge(G, weight); //vertex or weight.
+                }
+            }
         }
-       
+        private void visitEdge(IWeightedGraph G, int v)
+        {
+            isMarked[v] = true;
+            foreach (Edge e in G.GetEdgesFrom(v)) // Mark the vertex, add to heap.
+            {
+                if (!isMarked[e.OtherVertex(v)])
+                {
+                    heap.Enqueue(e, e );
+                }
+            }
+        }
+        public double WeightOfMst { get; set; }
+
+        public IEnumerable<Edge> GetMST()
+        {
+            return minSpanTree;
+        }
     }
 }
