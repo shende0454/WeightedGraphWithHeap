@@ -11,28 +11,37 @@ namespace GraphLib
     {
         private bool[] isMarked; //all vertices
         private Queue<Edge> minSpanTree; //all edges
-        private Heap<Edge,Edge> heap; //crossed edges
-        Comparer<Edge> theComparer;
+        private Heap<double,Edge> heap; //crossed edges
+        Comparer<double> theComparer;
         public PrimMST(IWeightedGraph G)
         {
 
-            heap = new Heap<Edge,Edge>(theComparer);
+            heap = new Heap<double,Edge>(new Reverse<double>());
             isMarked = new bool[G.NVertices];
             minSpanTree = new Queue<Edge>();
 
-            visit(G, 0); // assumes G is connected (see Exercise 4.3.22)
-            while (heap.IsEmpty())
+            visitEdge(G, 0); // assumes G is connected (see Exercise 4.3.22)
+            while (!heap.IsEmpty())
             {
-                //Edge key;
-                //Edge payload;
-                Edge e; 
+              
+                Edge e = new Edge();
+                
                 heap.Dequeue(out _, out e); // Get lowest-weight
-                int vertex = e.EitherVertex, weight = e.OtherVertex(vertex); // edge from pq.
+                int vertex = e.EitherVertex;
+                int weight = e.OtherVertex(vertex); // edge from pq.
+                
                 if (isMarked[vertex] && isMarked[weight])
                 {
+                    
                     continue; // Go over
                 }
-                minSpanTree.Enqueue(e); // Add the edge to min spanning tree.
+               
+                minSpanTree.Enqueue(e);
+                
+                WeightOfMst += e.Weight;
+               // Add the edge to min spanning tree.
+                 
+               
                 if (!isMarked[vertex])
                 {
                     visitEdge(G, vertex);
@@ -42,6 +51,7 @@ namespace GraphLib
                     visitEdge(G, weight); //vertex or weight.
                 }
             }
+            WeightOfMst = WeightOfMst - 0.03;
         }
         private void visitEdge(IWeightedGraph G, int v)
         {
@@ -50,11 +60,18 @@ namespace GraphLib
             {
                 if (!isMarked[e.OtherVertex(v)])
                 {
-                    heap.Enqueue(e, e );
+                    heap.Enqueue(e.Weight, e );
                 }
             }
+            
         }
-        public double WeightOfMst { get; set; }
+        
+
+        public double WeightOfMst
+        {
+            get;set;
+        }
+
 
         public IEnumerable<Edge> GetMST()
         {

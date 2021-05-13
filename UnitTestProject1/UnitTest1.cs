@@ -106,8 +106,6 @@ namespace UnitTestProject1
             graph.AddEdge(0, 1, 2.0);
             graph.AddEdge(0, 2, 4.0);
             graph.AddEdge(0, 3, 6.0);
-
-
             bool[] seen = new bool[4];
             foreach (IEdge nextEdge in graph.GetEdgesFrom(0))
             {

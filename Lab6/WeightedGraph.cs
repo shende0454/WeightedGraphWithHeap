@@ -8,8 +8,8 @@ namespace GraphLib
 {
     public class WeightedGraph : IWeightedGraph, IGraph
     {
-        public int v;
-        public int e;
+        public int vertex;
+        public int edge;
         public List<List<Edge>> _adjacencyList;
         public int NVertices { get; set; }
 
@@ -19,8 +19,7 @@ namespace GraphLib
             NVertices = 0;
             NEdges = 0;
             _adjacencyList = new List<List<Edge>>();
-            
-
+           
         }
 
         public void MakeVertex(int id)
@@ -38,7 +37,7 @@ namespace GraphLib
             Edge e = new Edge(firstVertex, secondVertex, weight);
 
             int vtx = e.EitherVertex;
-            int wght = e.OtherVertex(v);
+            int wght = e.OtherVertex(vertex);
 
             MakeVertex(firstVertex);
             MakeVertex(secondVertex);
@@ -53,7 +52,7 @@ namespace GraphLib
             Edge e = new Edge(firstVertex, secondVertex);
 
             int vtx = e.EitherVertex;
-            int wght = e.OtherVertex(v);
+            int wght = e.OtherVertex(vertex);
 
             MakeVertex(firstVertex);
             MakeVertex(secondVertex);
